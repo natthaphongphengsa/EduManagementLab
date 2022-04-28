@@ -1,6 +1,8 @@
 using EduManagementLab.Core.Interfaces;
 using EduManagementLab.Core.Services;
 using EduManagementLab.EfRepository;
+using EduManagementLab.IdentityServer;
+using IdentityServer4;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,10 +27,10 @@ JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
+    options.DefaultScheme = "AdvantagePlatform";
     options.DefaultChallengeScheme = "oidc";
-})
-.AddCookie("Cookies")
+})    
+.AddCookie("AdvantagePlatform")
 .AddOpenIdConnect("oidc", options =>
 {
     options.Authority = builder.Configuration["OpenIdConnect:Authority"];
@@ -44,9 +46,10 @@ builder.Services.AddAuthentication(options =>
         NameClaimType = builder.Configuration["OpenIdConnect:NameClaimType"],
         RoleClaimType = builder.Configuration["OpenIdConnect:RoleClaimType"]
     };
-
+    options.RequireHttpsMetadata = true;
     options.SaveTokens = true;
 });
+
 
 builder.Services.AddRazorPages();
 
@@ -61,6 +64,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();

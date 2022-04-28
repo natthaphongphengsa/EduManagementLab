@@ -170,7 +170,7 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
         }
         public async Task<IActionResult> OnPostLaunchOIDCAsync(Guid id, string messageType, string courseId, Guid personId)
         {
-            IMSTool tool;
+            IMSTool tool = new IMSTool();
             ResourceLink resourceLink = new ResourceLink();
             if (messageType == Constants.Lti.LtiResourceLinkRequestMessageType)
             {
@@ -202,14 +202,13 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
             }
 
             // The issuer identifier for the platform
-            string iss = "https://localhost:5001/",
+            string iss = "https://localhost:5001",
 
                 // The platform identifier for the user to login
                 login_hint = personId.ToString(),
 
                 // The endpoint to be executed at the end of the OIDC authentication flow
-                target_link_uri = tool.DeepLinkingLaunchUrl,
-                lti_deployment_id= "Key 1",
+                target_link_uri = tool.LaunchUrl,
 
                 // The identifier of the LtiResourceLink message (or the deep link message, etc)
             lti_message_hint = JsonConvert.SerializeObject(new { id, messageType, courseId });

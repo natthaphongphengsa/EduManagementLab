@@ -70,6 +70,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <h5 class="card-header bg-secondary text-light">
+                    Platform Settings
+                </h5>
+                <div class="card-body">
+                    <p>For reference when you register this platform in your tool.</p>
+                    <dl>
+                        <dt>@Html.DisplayNameFor(m => m.tool.IdentityServer.Issuer)</dt>
+                        <dd>@Model.tool.IdentityServer.Issuer</dd>
+                        <dt>@Html.DisplayNameFor(m => m.tool.IdentityServer.TokenUrl)</dt>
+                        <dd>@Model.tool.IdentityServer.TokenUrl</dd>
+                        <dt>@Html.DisplayNameFor(m => m.tool.IdentityServer.AuthorizeUrl)</dt>
+                        <dd>@Model.tool.IdentityServer.AuthorizeUrl</dd>
+                        <dt>@Html.DisplayNameFor(m => m.tool.IdentityServer.JwkSetUrl)</dt>
+                        <dd>@Model.tool.IdentityServer.JwkSetUrl</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-secondary" />
         </div>

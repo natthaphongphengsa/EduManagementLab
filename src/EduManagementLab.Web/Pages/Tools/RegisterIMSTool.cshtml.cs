@@ -2,6 +2,7 @@ using EduManagementLab.Core.Entities;
 using EduManagementLab.Core.Services;
 using EduManagementLab.IdentityServer;
 using IdentityModel;
+using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,6 +19,7 @@ namespace EduManagementLab.Web.Pages.Tools
         }
         [BindProperty]
         public ToolModel tool { get; set; } = new ToolModel();
+        private readonly string ToolPublicKey = Config.ToolPublicKey;
         public class ToolModel
         {
             public int IdentityServerClientId { get; set; }
@@ -47,26 +49,58 @@ namespace EduManagementLab.Web.Pages.Tools
             [Required]
             [Display(Name = "Display Name")]
             public string Name { get; set; }
+            public IdentityServer4 IdentityServer { get; set; } = new IdentityServer4();
+        }
+        public class IdentityServer4
+        {
+            /// <summary>
+            /// Identity Server issuer uri
+            /// </summary>
+            [Display(Name = "Issuer")]
+            public string? Issuer { get; set; }
+
+            /// <summary>
+            /// Identity Server authorize endpoint url
+            /// </summary>
+            [Display(Name = "Authorize URL")]
+            public string? AuthorizeUrl { get; set; }
+
+            /// <summary>
+            /// Identity Server JWK Set endpoint url
+            /// </summary>
+            [Display(Name = "JWK Set URL")]
+            public string? JwkSetUrl { get; set; }
+
+            /// <summary>
+            /// Identity Server access token endpoint uri
+            /// </summary>
+            [Display(Name = "Access Token URL")]
+            public string? TokenUrl { get; set; }
         }
 
         public void OnGet()
         {
-            loadDeploymentId();
+            loadStaticToolInfo();
         }
-        public void loadDeploymentId()
+        public void loadStaticToolInfo()
         {
             tool.ClientId = "IMSTool";
-            tool.Name = "EduLabTool";
-            tool.LaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/launches";
-            tool.DeepLinkingLaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/deep_link_launches";
-            tool.LoginUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/login_initiations";
+            //tool.Name = "EduLabTool";
+            //tool.LaunchUrl = "https://localhost:44308/Tool/324a8c8e865788b5";
+            //tool.DeepLinkingLaunchUrl = "https://localhost:44308/Tool/324a8c8e865788b5";
+            //tool.LoginUrl = "https://localhost:44308/OidcLogin";
             tool.DeploymentId = "Key1";
-            tool.PublicKey = "ToolTest".Sha256();
+            tool.PublicKey = ToolPublicKey;
+
+            tool.IdentityServer.Issuer = "https://localhost:5001";
+            tool.IdentityServer.AuthorizeUrl = "https://localhost:5001/connect/authorize";
+            tool.IdentityServer.JwkSetUrl = "https://localhost:5001/.well-known/openid-configuration/jwks";
+            tool.IdentityServer.TokenUrl = "https://localhost:5001/connect/token";
         }
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
-            {
+            {                
                 if (Config.Clients.Any(c => c.ClientId == tool.ClientId && c.ClientSecrets.Any(c => c.Value == tool.PublicKey)))
                 {
                     var newTool = new IMSTool
@@ -80,7 +114,7 @@ namespace EduManagementLab.Web.Pages.Tools
                         LoginUrl = tool.LoginUrl,
                     };
                     _IIMSToolService.CreateTool(newTool);
-                    return RedirectToPage("./Tools/Index");
+                    return RedirectToPage("./Index");
                 }
                 else
                 {
@@ -88,7 +122,7 @@ namespace EduManagementLab.Web.Pages.Tools
                     return Page();
                 }
             }
-            loadDeploymentId();
+            loadStaticToolInfo();
             return Page();
         }
     }

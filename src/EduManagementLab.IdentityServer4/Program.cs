@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using EduManagementLab.Core.Interfaces;
 using EduManagementLab.Core.Services;
 using EduManagementLab.EfRepository;
+using EduManagementLab.Core.Configuration;
 using EduManagementLab.IdentityServer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +13,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connectionString, opt => opt.MigrationsAssembly(assembly)));
 
-builder.Services.AddControllersWithViews(); 
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<CourseService>();
+builder.Services.AddTransient<CourseLineItemService>();
+builder.Services.AddTransient<IMSToolService>();
+builder.Services.AddTransient<ResourceLinkService>();
+
 
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -24,6 +30,7 @@ builder.Services.AddIdentityServer()
     .AddInMemoryApiScopes(Config.ApiScopes)
     .AddProfileService<CustomProfileService>()
     .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+    .AddLtiJwtBearerClientAuthentication()
     .AddDeveloperSigningCredential();
 
 builder.Services.AddAuthentication();

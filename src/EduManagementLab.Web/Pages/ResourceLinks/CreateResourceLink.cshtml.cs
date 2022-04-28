@@ -63,14 +63,14 @@ namespace EduManagementLab.Web.Pages.ResourceLinks
                     {
                         Description = ResourceLink.Description,
                         Title = ResourceLink.Title,
-                        Tool = targetTool,                        
+                        Tool = targetTool,
                         CustomProperties = ResourceLink.CustomProperties,
                     };
 
                     _resourceLinkService.CreateResourceLink(newResource);
                     _courseService.UpdateCourseResourceLink(ResourceLink.selectedCourse, newResource);
 
-                    return RedirectToPage("./ResourceLinks/Index");
+                    return RedirectToPage("./Index");
                 }
             }
             LoadToolsAndCourses();

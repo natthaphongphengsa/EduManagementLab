@@ -1,4 +1,4 @@
-﻿namespace LtiAdvantage
+﻿namespace EduManagementLab.Core.LtiAdvantage
 {
     /// <summary>
     /// LTI Advantage Library constants.

@@ -1,4 +1,3 @@
-using EduManagementLab.Core.Entities;
 using EduManagementLab.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

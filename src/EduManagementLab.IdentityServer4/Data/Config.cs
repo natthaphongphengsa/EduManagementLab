@@ -7,6 +7,7 @@ namespace EduManagementLab.IdentityServer
 {
     public static class Config
     {
+        public static string ToolPublicKey = File.ReadAllText("C:/Users/Natth/Source/Repos/EduManagementLab/src/EduManagementLab.IdentityServer4/Data/PublicKey.txt").ToString();
         public static IEnumerable<IdentityResource> IdentityResources => new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
@@ -24,6 +25,7 @@ namespace EduManagementLab.IdentityServer
              new ApiScope("eduManagementLabApi.read", "Read Access to EduManagementLab API"),
              new ApiScope("eduManagementLabApi.write", "Write Access to EduManagementLab API"),
         };
+
         public static IEnumerable<Client> Clients => new List<Client>
         {
             new Client
@@ -38,7 +40,6 @@ namespace EduManagementLab.IdentityServer
                 {
                     "https://localhost:5002",
                     "https://localhost:5001",
-                    "https://localhost:7187"
                 }
             },
             new Client
@@ -46,10 +47,17 @@ namespace EduManagementLab.IdentityServer
                 //Tool Client
                 ClientId = "IMSTool",
                 ClientName = "EduLabTool",
-                AllowedGrantTypes = GrantTypes.Code,
-                ClientSecrets = new List<Secret> {new Secret("ToolTest".Sha256())},
+                AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
+                ClientSecrets = new List<Secret>
+                {
+                    new Secret
+                    {
+                        Type = Validation.Constants.SecretTypes.PublicPemKey,
+                        Value = ToolPublicKey
+                    }
+                },
                 AllowedScopes = LtiScopes,
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                RedirectUris = {"https://localhost:44308/Tool/320eb10188a5871a"},
                 RequireConsent = false,
             },
             new Client
@@ -61,7 +69,7 @@ namespace EduManagementLab.IdentityServer
                 AllowedGrantTypes = GrantTypes.Code,
                 AllowOfflineAccess = true,
                 RedirectUris = {"https://localhost:5002/signin-oidc"},
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc"},
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,

@@ -18,5 +18,9 @@ namespace EduManagementLab.Web.Controllers
         {
             return SignOut("Cookies", "oidc");
         }
+        public IActionResult Login()
+        {
+            return LocalRedirect("http://localhost:5001");
+        }
     }
 }

@@ -23,7 +23,7 @@
           asp-route-messageType="@Constants.Lti.LtiResourceLinkRequestMessageType"
           asp-route-courseId="@Model.Course.Id"
           asp-route-personId="@User?.GetSubjectId()">
-            <button type="submit" class="btn btn-primary">Launch Tool OIDC</button>
+            <button type="submit" class="btn btn-primary">Launch @Model.CourseLineItem.ResourceLink.Tool.Name</button>
         </form>
         <dl class="row">
             <dt class="col-sm-2">
